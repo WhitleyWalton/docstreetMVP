@@ -25,6 +25,7 @@ app.post('/register', async (req, res) => {
     // Email validation
     const emailPattern = /@(spelman\.edu|morehouse\.edu)$/;
     if (!emailPattern.test(email)) {
+        console.log("Invalid email domain:", email);
         return res.status(400).json({ success: false, message: 'Email must end with @spelman.edu or @morehouse.edu.' });
     }
 
@@ -36,6 +37,9 @@ app.post('/register', async (req, res) => {
             options: { data: { name } } // Store additional user info
         });
 
+        console.log("Supabase response data:", data);
+        console.log("Supabase response error:", error);
+
         if (error) throw error;
 
         res.json({ success: true, message: 'Registration successful. Check your email for verification.' });
@@ -44,6 +48,7 @@ app.post('/register', async (req, res) => {
         res.status(500).json({ success: false, message: error.message || 'Error registering user' });
     }
 });
+
 
 // Login endpoint
 app.post('/login', async (req, res) => {
@@ -83,6 +88,53 @@ app.post('/verify', async (req, res) => {
         console.error('Verification error:', error);
         res.status(500).json({ success: false, message: 'Error verifying email' });
     }
+});
+
+// Get list of specialties
+app.get('/api/specialties', async (req, res) => {
+    const { data, error } = await supabase.from('specialties').select('*');
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+});
+
+// Get list of insurances
+app.get('/api/insurances', async (req, res) => {
+    const { data, error } = await supabase.from('insurances').select('*');
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+});
+
+// Get list of doctors with filters
+app.get('/api/doctors', async (req, res) => {
+    const { specialty, insurance } = req.query;
+    let query = supabase.from('doctors')
+        .select('id, name, bio, rating, specialties(name) as specialty_name, insurances(name) as insurance_name')
+        .leftJoin('specialties', 'specialties.id', 'doctors.specialty_id')
+        .leftJoin('insurances', 'insurances.id', 'doctors.insurance_id');
+
+    if (specialty) query = query.eq('specialty_id', specialty);
+    if (insurance) query = query.eq('insurance_id', insurance);
+
+    const { data, error } = await query;
+    if (error) return res.status(500).json({ error: error.message });
+    res.json(data);
+});
+
+// Get user profile by authenticated user ID
+app.get('/api/user-profile', async (req, res) => {
+    const { user } = await supabase.auth.getUser();
+    
+    if (!user) return res.status(401).json({ error: "Unauthorized" });
+
+    const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    res.json(data);
 });
 
 // Fallback route to serve React frontend for any unmatched routes

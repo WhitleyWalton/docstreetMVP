@@ -1,0 +1,23 @@
+INSERT INTO doctors (name, specialty, insurance_accepted, location, contact_email, medical_school)
+VALUES ('Dr. Alicia Brown',
+        'Family Medicine', ARRAY['Medicaid',
+                                 'Blue Cross Blue Shield'], 'Atlanta, GA',
+                                                            'alicia.brown@hospital.com',
+                                                            'Morehouse School of Medicine'), ('Dr. Michael Johnson',
+                                                                                              'OBGYN', ARRAY['Medicare',
+                                                                                                             'Cigna'], 'Atlanta, GA',
+                                                                                                                       'michael.johnson@hospital.com',
+                                                                                                                       'Morehouse School of Medicine'), ('Dr. Sophia Carter',
+                                                                                                                                                         'Pediatrics', ARRAY['UnitedHealthcare',
+                                                                                                                                                                             'Aetna'], 'Atlanta, GA',
+                                                                                                                                                                                       'sophia.carter@hospital.com',
+                                                                                                                                                                                       'Morehouse School of Medicine'), ('Dr. Jamal White',
+                                                                                                                                                                                                                         'Cardiology', ARRAY['Humana',
+                                                                                                                                                                                                                                             'Kaiser Permanente'], 'Atlanta, GA',
+                                                                                                                                                                                                                                                                   'jamal.white@hospital.com',
+                                                                                                                                                                                                                                                                   'Morehouse School of Medicine'), ('Dr. Natasha Green',
+                                                                                                                                                                                                                                                                                                     'Dermatology', ARRAY['Medicaid',
+                                                                                                                                                                                                                                                                                                                          'Tricare'], 'Atlanta, GA',
+                                                                                                                                                                                                                                                                                                                                      'natasha.green@hospital.com',
+                                                                                                                                                                                                                                                                                                                                      'Morehouse School of Medicine');
+
